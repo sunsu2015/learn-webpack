@@ -9,5 +9,13 @@ module.exports = {
         path: path.resolve(__dirname, './build'),
         filename: '[name].js'
     },
-    mode: 'production'
+    mode: 'production',
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: ["style-loader", "css-loader"]
+            }
+        ]
+    }
 }

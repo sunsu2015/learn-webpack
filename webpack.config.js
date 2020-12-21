@@ -1,11 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
     entry: {
         index: './src/index.js',
-        other: './src/other.js',
-        third: './src/third.js'
+        // other: './src/other.js', // 多入口时，hmr会报错，Update failed: ChunkLoadError: Loading hot update chunk index failed.
+        // third: './src/third.js'
     },
     // entry: './src/index.js',
     output: {
@@ -13,11 +14,21 @@ module.exports = {
         filename: '[name].js'
     },
     mode: 'development',
+    // target: 'web',
+    // target: ['web', 'es5'],
     devServer: {
         contentBase: "build",
         compress: true,
         port: 9000,
-        hot: true
+        hot: true,
+        hotOnly: true, // js更新后不会自动刷新页面
+        before(app) {
+            app.get('/api/info', (req, res) => {
+                res.json({
+                    key: 'value'
+                })
+            })
+        }
     },
     module: {
         rules: [
@@ -49,7 +60,7 @@ module.exports = {
         template: './index.html',
         inject: 'body',
         title: 'test title'
-    })],
+    })/*, new webpack.HotModuleReplacementPlugin()*/], // webpack5 css hmr不需要HotModuleReplacementPlugin
     devtool: "cheap-module-source-map", // inline-source-map
     optimization: {
         splitChunks: {

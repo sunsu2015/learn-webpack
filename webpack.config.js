@@ -68,6 +68,6 @@ module.exports = {
             name: "vendor"
         },
         // sideEffects: true,
-        // usedExports: true
+        usedExports: true
     }
 }

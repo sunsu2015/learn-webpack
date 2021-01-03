@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
     entry: {
         index: './src/index.js',
@@ -30,10 +31,20 @@ module.exports = {
             })
         }
     },
+    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({
+        template: './index.html',
+        inject: 'body',
+        title: 'test title'
+    })],
+    // MiniCssExtractPlugin在webpack5中暂时报错
+    // new MiniCssExtractPlugin()
+    // webpack5 css hmr不需要HotModuleReplacementPlugin
+    /*new webpack.HotModuleReplacementPlugin()*/
     module: {
         rules: [
             {
                 test: /\.css$/,
+                // use: [MiniCssExtractPlugin.loader, 'css-loader'] MiniCssExtractPlugin在webpack5中暂时报错
                 use: ["style-loader", {
                     loader: "css-loader",
                     options: {
@@ -56,11 +67,6 @@ module.exports = {
             }
         ]
     },
-    plugins: [new CleanWebpackPlugin(), new HtmlWebpackPlugin({
-        template: './index.html',
-        inject: 'body',
-        title: 'test title'
-    })/*, new webpack.HotModuleReplacementPlugin()*/], // webpack5 css hmr不需要HotModuleReplacementPlugin
     devtool: "cheap-module-source-map", // inline-source-map
     optimization: {
         splitChunks: {
